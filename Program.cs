@@ -1,10 +1,12 @@
+using System;
+
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
 
 var random = new Random();
 int secret = random.Next(1, 101);
 
-app.MapGet("/", () =>
+app.MapGet("/", () => "Number Guessing Game");
 {
     return """
     <html>
