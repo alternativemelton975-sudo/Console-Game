@@ -6,7 +6,7 @@ var app = builder.Build();
 var random = new Random();
 int secret = random.Next(1, 101);
 
-app.MapGet("/", () => "Number Guessing Game");
+app.MapGet("/", () =>
 {
     return """
     <html>
