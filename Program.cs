@@ -1,4 +1,4 @@
-using System;
+using Microsoft.AspNetCore.Http;
 
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
@@ -8,7 +8,7 @@ int secret = random.Next(1, 101);
 
 app.MapGet("/", () =>
 {
-    return """
+    return Results.Content("""
     <html>
     <body>
         <h1>Number Guessing Game</h1>
@@ -18,7 +18,7 @@ app.MapGet("/", () =>
         </form>
     </body>
     </html>
-    """;
+    """, "text/html");
 });
 
 app.MapGet("/guess", (int guess) =>
@@ -39,14 +39,14 @@ app.MapGet("/guess", (int guess) =>
         message = "Too high!";
     }
 
-    return $"""
+    return Results.Content($"""
     <html>
     <body>
         <h1>{message}</h1>
         <a href="/">Try Again</a>
     </body>
     </html>
-    """;
+    """, "text/html");
 });
 
 app.Run();
