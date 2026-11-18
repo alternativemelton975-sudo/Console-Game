@@ -1,46 +1,76 @@
-﻿using System;
+@page "/"
 
-class Program
+<h1>Number Guessing Game</h1>
+
+<p>@message</p>
+
+@if (!won)
 {
-    static void Main(string[] args)
+    <input type="number" @bind="guessInput" placeholder="Enter your guess" />
+
+    <button @onclick="CheckGuess">
+        Guess
+    </button>
+}
+
+@if (won)
+{
+    <button @onclick="StartNewGame">
+        Play Again
+    </button>
+}
+
+<p>Attempts: @attempts</p>
+
+@code {
+    private Random random = new();
+
+    private int secret;
+    private int attempts;
+    private bool won;
+
+    private string guessInput = "";
+    private string message = "";
+
+    protected override void OnInitialized()
     {
-        Console.Title = "Number Guessing Game";
-        Console.WriteLine("Welcome to the Number Guessing Game!");
-        Console.WriteLine("I'm thinking of a number between 1 and 100.");
-        Console.WriteLine("Can you guess what it is?");
+        StartNewGame();
+    }
 
-        var random = new Random();
-        int secret = random.Next(1, 101);
-        int attempts = 0;
-        bool won = false;
+    private void StartNewGame()
+    {
+        secret = random.Next(1, 101);
+        attempts = 0;
+        won = false;
+        guessInput = "";
 
-        while (!won)
+        message = "I'm thinking of a number between 1 and 100. Can you guess it?";
+    }
+
+    private void CheckGuess()
+    {
+        if (!int.TryParse(guessInput, out int guess))
         {
-            Console.Write("Enter your guess: ");
-            string input = Console.ReadLine();
-            if (!int.TryParse(input, out int guess))
-            {
-                Console.WriteLine("Please enter a valid number.");
-                continue;
-            }
-            attempts++;
-
-            if (guess == secret)
-            {
-                Console.WriteLine($"Congratulations! You guessed it in {attempts} attempts.");
-                won = true;
-            }
-            else if (guess < secret)
-            {
-                Console.WriteLine("Too low. Try again.");
-            }
-            else
-            {
-                Console.WriteLine("Too high. Try again.");
-            }
+            message = "Please enter a valid number.";
+            return;
         }
 
-        Console.WriteLine("Press any key to exit...");
-        Console.ReadKey();
+        attempts++;
+
+        if (guess == secret)
+        {
+            won = true;
+            message = $"🎉 Congratulations! You guessed it in {attempts} attempts.";
+        }
+        else if (guess < secret)
+        {
+            message = "⬆️ Too low. Try again.";
+        }
+        else
+        {
+            message = "⬇️ Too high. Try again.";
+        }
+
+        guessInput = "";
     }
 }
