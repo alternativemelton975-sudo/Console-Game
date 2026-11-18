@@ -1,0 +1,75 @@
+@page "/"
+
+<h1>🎯 Number Guessing Game</h1>
+
+<p>@message</p>
+
+@if (!won)
+{
+    <input type="number" @bind="guessInput" />
+
+    <button @onclick="CheckGuess">
+        Guess
+    </button>
+}
+else
+{
+    <button @onclick="NewGame">
+        Play Again
+    </button>
+}
+
+<p>Attempts: @attempts</p>
+
+@code {
+
+    private readonly Random random = new();
+
+    private int secret;
+    private int attempts;
+    private bool won;
+
+    private string guessInput = "";
+    private string message = "";
+
+    protected override void OnInitialized()
+    {
+        NewGame();
+    }
+
+    private void NewGame()
+    {
+        secret = random.Next(1, 101);
+        attempts = 0;
+        won = false;
+        guessInput = "";
+        message = "Guess a number between 1 and 100.";
+    }
+
+    private void CheckGuess()
+    {
+        if (!int.TryParse(guessInput, out int guess))
+        {
+            message = "Please enter a valid number.";
+            return;
+        }
+
+        attempts++;
+
+        if (guess == secret)
+        {
+            won = true;
+            message = $"Congratulations! You guessed it in {attempts} attempts.";
+        }
+        else if (guess < secret)
+        {
+            message = "Too low.";
+        }
+        else
+        {
+            message = "Too high.";
+        }
+
+        guessInput = "";
+    }
+}
